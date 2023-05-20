@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
+import { RotatingTriangles } from 'react-loader-spinner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -64,11 +65,12 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Resume Analyzer</h1>
       <input
         type="text"
         placeholder="Career Field"
+        className="input"
         value={careerField}
         onChange={handleCareerFieldChange}
       />
@@ -76,6 +78,7 @@ const Home = () => {
       <input
         type="number"
         placeholder="Years of Experience"
+        className="input"
         value={yearsOfExperience}
         onChange={handleYearsOfExperienceChange}
       />
@@ -91,18 +94,49 @@ const Home = () => {
             {Array.from(new Array(numPages), (_, index) => (
               <Page key={`page_${index + 1}`} pageNumber={index + 1} />
             ))}
-          </Document>
+          </Document> 
         </div>
       )}
-      <button onClick={analyzeResume} disabled={loading}>
+      <button onClick={analyzeResume} disabled={loading} className="button">
         Analyze
       </button>
-      {loading && <p>Loading...</p>}
-      <ul>
+      {loading && (
+        <div className="loading">
+          <RotatingTriangles
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="rotating-triangels-loading"
+            wrapperStyle={{}}
+            wrapperClass="rotating-triangels-wrapper"
+          />
+          <p>Loading...</p>
+        </div>
+      )}
+      <ul className="suggestions">
         {suggestions.map((suggestion, index) => (
           <li key={index}>{suggestion}</li>
         ))}
       </ul>
+      <div className="donation-section">
+        <h2>Support Our Work</h2>
+        <p>
+          We're glad you're finding this Resume Analyzer helpful! We developed this tool to support job seekers like you.
+          However, running this service involves some costs. For example, each time the tool analyzes a resume, it makes an API call which incurs a cost. 
+          To keep this service free and accessible to all, we're relying on the generosity of users who are able to contribute.
+        </p>
+        <p>
+          If you're in a position to do so, please consider supporting our work. Any contribution, no matter how small, can make a big difference and allow us to continue improving and maintaining this tool. 
+          Thank you for your support!
+        </p>
+        <a href="https://www.buymeacoffee.com/thebranch" target="_blank" rel="noopener noreferrer">
+          <img 
+            src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
+            alt="Buy Me A Coffee" 
+            style={{height: 50, width: 217}}
+          />
+        </a>
+      </div>
     </div>
   );
 };
